@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSave – Intelligent Campus Energy Management System</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Themed Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="app-wrap">
+        <!-- Header -->
+        <header class="header-bar">
+            <a href="#" class="brand-group">
+                <div class="brand-icon-box">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="brand-titles">
+                    <h1>SmartSave</h1>
+                    <p>Detect. Automate. Save.</p>
+                </div>
+            </a>
+
+            <div class="header-actions">
+                <!-- Help & Questions Button -->
+                <button class="btn-icon" id="helpBtn" aria-label="Help and FAQ" title="Help & Frequently Asked Questions">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+
+                <!-- Theme Toggle Button -->
+                <button class="btn-icon" id="themeBtn" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+
+                <!-- Audio Toggle Button -->
+                <button class="btn-icon" id="audioBtn" aria-label="Toggle Audio" title="Toggle Sound">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+
+                <!-- Reset Demo Button -->
+                <button class="btn-pill" onclick="resetEntireDemo()" title="Reset all rooms to baseline demo state">
+                    <i class="fas fa-redo-alt"></i>
+                    <span>Reset Demo</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Card -->
+        <section class="hero-box">
+            <span class="hero-tag">
+                <i class="fas fa-leaf"></i> Design Thinking Project • Stanford AEIOU Framework
+            </span>
+            <h2 class="hero-title">Lights On, Nobody Home</h2>
+            <p class="hero-desc">
+                An intelligent campus electricity management prototype designed to eliminate unnecessary power waste in empty classrooms, unoccupied hostel rooms, and unattended study halls through automatic occupancy detection and graceful countdown shutdown.
+            </p>
+
+            <!-- Metrics Row -->
+            <div class="metrics-row">
+                <div class="metric-item">
+                    <span class="metric-label">Electricity Saved Today</span>
+                    <div class="metric-value emerald" id="metricSavedKwh">58.4 kWh</div>
+                    <span class="metric-sub">avoided in empty campus spaces</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Estimated Money Saved</span>
+                    <div class="metric-value blue" id="metricMoneySaved">₹496</div>
+                    <span class="metric-sub">@ ₹8.50/kWh institutional tariff</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Campus Occupancy</span>
+                    <div class="metric-value" id="metricRoomsCount">3 Occupied / 5 Empty</div>
+                    <span class="metric-sub">across 8 monitored test beds</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Active Power Wastage</span>
+                    <div class="metric-value amber" id="metricWastingCount">3 Room(s)</div>
+                    <span class="metric-sub">countdown actively ticking</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- One-Click Presenter Demonstration Bar -->
+        <section class="demo-control-bar">
+            <div class="demo-title-group">
+                <span class="demo-badge"><i class="fas fa-play"></i> Presenter Mode</span>
+                <span class="demo-title">Simulate Real Student Scenarios:</span>
+            </div>
+            <div class="demo-buttons-group">
+                <button class="btn-demo-action btn-leave" onclick="triggerDemoStep1()">
+                    <i class="fas fa-door-open"></i> 1. Student Leaves
+                </button>
+                <button class="btn-demo-action btn-off" onclick="triggerDemoStep2()">
+                    <i class="fas fa-power-off"></i> 2. Auto-Shutdown
+                </button>
+                <button class="btn-demo-action btn-enter" onclick="triggerDemoStep3()">
+                    <i class="fas fa-user-plus"></i> 3. Student Returns
+                </button>
+            </div>
+        </section>
+
+        <!-- Live Monitored Campus Rooms -->
+        <section style="margin-bottom: 40px;">
+            <div class="section-title-wrap">
+                <div>
+                    <h2 class="section-h2">Live Monitored Campus Rooms</h2>
+                    <p class="section-p">Real-time status of monitored classrooms, lecture halls, hostel dorms, and common study wings.</p>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">
+                    <i class="fas fa-circle" style="color: var(--accent-emerald); font-size: 0.6rem;"></i> Live System Simulating
+                </span>
+            </div>
+
+            <!-- Room Category Filter Tabs -->
+            <div class="filter-tabs-bar">
+                <button class="filter-tab active" data-filter="all">
+                    <i class="fas fa-layer-group"></i> All Campus Zones (8)
+                </button>
+                <button class="filter-tab" data-filter="classroom">
+                    <i class="fas fa-chalkboard-teacher"></i> Academic Classrooms (4)
+                </button>
+                <button class="filter-tab" data-filter="hostel">
+                    <i class="fas fa-bed"></i> Hostel & Study Rooms (4)
+                </button>
+            </div>
+
+            <!-- Dynamic Room Cards Grid -->
+            <div class="rooms-grid" id="roomsGridContainer"></div>
+        </section>
+
+        <!-- How It Works (Simple 4-Step Flow) -->
+        <section style="margin-bottom: 40px;">
+            <div class="section-title-wrap">
+                <div>
+                    <h2 class="section-h2">How SmartSave Works</h2>
+                    <p class="section-p">Simple, unobtrusive automation that respects student routines while saving energy.</p>
+                </div>
+            </div>
+
+            <div class="flow-steps-grid">
+                <div class="flow-step-card">
+                    <div class="step-num-badge">1</div>
+                    <h3 class="step-title">Occupancy Detected</h3>
+                    <p class="step-desc">When a student enters, the room's motion sensor identifies presence and automatically turns on configured lights and fans.</p>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="step-num-badge">2</div>
+                    <h3 class="step-title">Room Becomes Empty</h3>
+                    <p class="step-desc">When students rush out to class or meals, the sensor detects that nobody is in the room anymore.</p>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="step-num-badge">3</div>
+                    <h3 class="step-title">Grace Countdown Begins</h3>
+                    <p class="step-desc">A configurable countdown (e.g. 30 seconds) starts, ensuring devices aren't cut off if someone just stepped out for a moment.</p>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="step-num-badge">4</div>
+                    <h3 class="step-title">Auto-Shutdown & Savings</h3>
+                    <p class="step-desc">If nobody returns, lights and fans automatically switch OFF. When someone returns later, power is instantly restored!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Thinking & AEIOU Observation Findings -->
+        <section class="aeiou-summary-card">
+            <h2 class="section-h2" style="margin-bottom: 6px;">Our Design Thinking (AEIOU) Fieldwork Findings</h2>
+            <p class="section-p">Direct observations conducted during our campus audit that motivated the creation of SmartSave.</p>
+
+            <table class="aeiou-table">
+                <thead>
+                    <tr>
+                        <th>Location Type</th>
+                        <th>Observed Status</th>
+                        <th>Why It Happens (Root Cause)</th>
+                        <th>SmartSave Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-main);"><i class="fas fa-chalkboard-teacher" style="color: var(--accent-blue); margin-right: 6px;"></i> Academic Classrooms (101-104)</td>
+                        <td><span style="color: var(--accent-emerald); font-weight: 600;">Lights & Fans Mostly OFF</span></td>
+                        <td>Scheduled lectures have professors and building staff who lock up and turn off switches when class ends.</td>
+                        <td>Maintains eco-standby; prevents accidental overnight usage if cleaning staff or late groups forget lights.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-main);"><i class="fas fa-bed" style="color: var(--accent-amber); margin-right: 6px;"></i> Hostel Rooms (201-203)</td>
+                        <td><span style="color: var(--accent-amber); font-weight: 600;">Lights & Fans Frequently Left ON</span></td>
+                        <td>Students rush to 8:00 AM classes in a hurry. Fixed hostel fees mean students don't pay per-unit electric bills.</td>
+                        <td>Automatic grace countdown shuts off dorm lights and fans within minutes of departure.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-main);"><i class="fas fa-book-reader" style="color: var(--accent-rose); margin-right: 6px;"></i> Hostel Study Hall</td>
+                        <td><span style="color: var(--accent-rose); font-weight: 600;">Lights & High-Speed Fans Left ON 24/7</span></td>
+                        <td>Tragedy of the Commons: Late-night study groups leave without turning switches off, assuming someone else will.</td>
+                        <td>Autonomous shutoff eliminates continuous wasteful power consumption in shared campus spaces.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Energy Savings Comparison Chart -->
+        <section class="chart-container-card">
+            <div class="section-title-wrap" style="margin-bottom: 0;">
+                <div>
+                    <h2 class="section-h2">Daily Energy Consumption Comparison</h2>
+                    <p class="section-p">Traditional unmonitored campus wastage vs. SmartSave automated shutdown curve.</p>
+                </div>
+            </div>
+            <div class="chart-box">
+                <canvas id="savingsChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Help & Frequently Asked Questions (User Support & Q&A) -->
+        <section class="help-section-card" id="help-section">
+            <div class="section-title-wrap">
+                <div>
+                    <h2 class="section-h2"><i class="fas fa-question-circle" style="color: var(--accent-blue); margin-right: 8px;"></i> Help & Frequently Asked Questions</h2>
+                    <p class="section-p">Have a question or need help understanding SmartSave? Read common answers below or ask directly.</p>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">
+                    <i class="fas fa-life-ring" style="color: var(--accent-blue); font-size: 0.75rem;"></i> Student & Admin Support
+                </span>
+            </div>
+
+            <div class="help-grid-2col">
+                <!-- Left Column: FAQ Accordion -->
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button type="button" class="faq-question">
+                            <span><i class="fas fa-shield-alt" style="color: var(--accent-blue); margin-right: 8px;"></i> What if I'm studying quietly or sleeping in my hostel room?</span>
+                            <i class="fas fa-chevron-down faq-icon-chevron"></i>
+                        </button>
+                        <div class="faq-answer">
+                            SmartSave includes an easy <strong>Manual Override</strong> toggle on each room card. When you turn Override ON, automatic shutdown is temporarily suspended, keeping your fans and lights continuously on even when you're resting or studying completely still.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-question">
+                            <span><i class="fas fa-hourglass-half" style="color: var(--accent-amber); margin-right: 8px;"></i> Why does the system wait 30 seconds before auto-shutdown?</span>
+                            <i class="fas fa-chevron-down faq-icon-chevron"></i>
+                        </button>
+                        <div class="faq-answer">
+                            The 30-second grace countdown prevents accidental shutoffs. If a student briefly steps out to grab drinking water, borrow a pen, or use the restroom, the room remains powered. If nobody returns before the countdown ends, the relay safely powers down the devices.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-question">
+                            <span><i class="fas fa-toggle-on" style="color: var(--accent-emerald); margin-right: 8px;"></i> Can students and faculty still use regular wall switches?</span>
+                            <i class="fas fa-chevron-down faq-icon-chevron"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Yes! The intelligent IoT relays operate in parallel with standard manual switches. You can turn any light or ceiling fan ON or OFF manually at any time without restriction.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-question">
+                            <span><i class="fas fa-calculator" style="color: var(--accent-blue); margin-right: 8px;"></i> How are electricity savings and money calculated?</span>
+                            <i class="fas fa-chevron-down faq-icon-chevron"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Savings are computed dynamically from device wattage ratings (e.g. 160W for classroom LED banks, 140W for dual fans, 75W for hostel ceiling fans) multiplied by hours saved, evaluated against standard institutional electricity rates (<strong>₹8.50 per kWh</strong>).
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button type="button" class="faq-question">
+                            <span><i class="fas fa-lightbulb" style="color: var(--accent-purple); margin-right: 8px;"></i> What did our campus AEIOU observations discover?</span>
+                            <i class="fas fa-chevron-down faq-icon-chevron"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Our Design Thinking fieldwork revealed that while classrooms are regularly shut off by staff, hostel dorms and late-night study halls frequently had lights and high-speed fans left spinning for hours because students rush to morning classes and feel no personal utility cost. SmartSave solves this root problem.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Ask Box -->
+                <div class="ask-box">
+                    <h3 class="ask-box-title">
+                        <i class="fas fa-comment-dots" style="color: var(--accent-blue);"></i> Ask SmartSave a Question
+                    </h3>
+                    <p class="ask-box-desc">
+                        Ask any question or click a topic below for instant, clear answers:
+                    </p>
+
+                    <!-- Quick Ask Topic Pills -->
+                    <div class="quick-pills-wrap">
+                        <button type="button" class="btn-quick-ask" data-q="What if I sleep or study quietly?">Sleeping / Reading</button>
+                        <button type="button" class="btn-quick-ask" data-q="Why 30s countdown?">30s Countdown</button>
+                        <button type="button" class="btn-quick-ask" data-q="How is money saved calculated?">Money Saved</button>
+                        <button type="button" class="btn-quick-ask" data-q="Can I use manual override?">Manual Override</button>
+                        <button type="button" class="btn-quick-ask" data-q="What happens when someone returns?">Student Returns</button>
+                    </div>
+
+                    <!-- Input Row -->
+                    <div class="ask-input-row">
+                        <input type="text" id="userQuestionInput" class="ask-input" placeholder="e.g. How does auto-shutdown work?">
+                        <button type="button" id="btnAskSubmit" class="btn-ask-submit">
+                            <i class="fas fa-paper-plane"></i> Ask
+                        </button>
+                    </div>
+
+                    <!-- Live Answer Container -->
+                    <div id="askResponseBox" class="ask-response-box">
+                        <div class="ask-response-title">
+                            <i class="fas fa-info-circle"></i> <span>Answer:</span>
+                        </div>
+                        <p id="askResponseText" class="ask-response-text"></p>
+                    </div>
+
+                    <!-- Feedback / Question Note -->
+                    <div class="ask-feedback-row">
+                        <span>Have a campus energy suggestion?</span>
+                        <button type="button" class="btn-feedback" id="btnSendFeedback">
+                            <i class="fas fa-comment-alt"></i> Send Suggestion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-wrap">
+            <p>SmartSave – Intelligent Campus Energy Management System • Built for University Design Thinking</p>
+            <p style="margin-top: 4px; font-size: 0.76rem;">"Detect. Automate. Save." • Clean, responsive prototype</p>
+        </footer>
+    </div>
+
+    <!-- Application Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>
